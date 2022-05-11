@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.dao.UserDao">
+    <resultMap type="com.qiin.pmsys.entity.House" id="HouseMap">
+        <result property="houseid" column="houseId" jdbcType="INTEGER"/>
+        <result property="buildingid" column="buildingId" jdbcType="INTEGER"/>
+        <result property="housename" column="houseName" jdbcType="VARCHAR"/>
+        <result property="ownerid" column="ownerId" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap type="com.qiin.pmsys.entity.User" id="UserMap">
+        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="ownerid" column="ownerId" jdbcType="INTEGER"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <collection property="owner" ofType="com.qiin.pmsys.entity.Owner">
+            <id column="ownerId" property="ownerid"/>
+            <result column="ownername" property="ownername"/>
+            <collection property="houses" ofType="com.qiin.pmsys.entity.House" resultMap="HouseMap">
+                <result column="houseId" property="houseid"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserMap">
+        select userId,
+               username,
+               password,
+               ownerId,
+               avatar,
+               status
+        from user
+        where userId = #{userid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+        u.userId, u.username, u.password, u.ownerId, n.ownerName,h.houseName,avatar,u.status
+        from user u,owner n,house h
+        <where>
+            u.`ownerId`=n.`ownerId` AND n.`houseId`=h.`houseId`
+            <if test="username != null and username != ''">
+                and username like #{username}
+            </if>
+        </where>
+        limit #{pageStart}, #{pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from user
+        <where>
+            <if test="userid != null">
+                and userId = #{userid}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="ownerid != null">
+                and ownerId = #{ownerid}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                and avatar = #{avatar}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userid" useGeneratedKeys="true">
+        insert into user(username, password, ownerId, avatar, status)
+        values (#{username}, #{password}, #{ownerid}, #{avatar}, #{status})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userid" useGeneratedKeys="true">
+        insert into user(username, password, ownerId, avatar,status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.username}, #{entity.password}, #{entity.ownerid}, #{entity.avatar},#{entity.status})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userid" useGeneratedKeys="true">
+        insert into user(username, password, ownerId, avatar,status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.username}, #{entity.password}, #{entity.ownerid}, #{entity.avatar},#{entity.status})
+        </foreach>
+        on duplicate key update
+        username = values(username),
+        password = values(password),
+        ownerId = values(ownerId),
+        avatar = values(avatar),
+        status=values(status)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="ownerid != null">
+                ownerId = #{ownerid},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where userId = #{userid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from user
+        where userId = #{userid}
+    </delete>
+
+    <select id="queryByUser" resultMap="UserMap">
+        select *
+        from user
+        where username = #{username}
+          and password = #{password}
+        and status=1
+    </select>
+</mapper>
+

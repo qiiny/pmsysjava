@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.FeePropertyDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.FeeProperty">
+    <id column="fee_property_propertyId" jdbcType="INTEGER" property="propertyid" />
+    <result column="fee_property_ownerId" jdbcType="INTEGER" property="ownerid" />
+    <result column="fee_property_payMonth" jdbcType="VARCHAR" property="paymonth" />
+    <result column="fee_property_payMoney" jdbcType="DOUBLE" property="paymoney" />
+    <result column="fee_property_isPay" jdbcType="INTEGER" property="ispay" />
+    <result column="fee_property_payTime" jdbcType="TIMESTAMP" property="paytime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    fee_property.propertyId as fee_property_propertyId, fee_property.ownerId as fee_property_ownerId, 
+    fee_property.payMonth as fee_property_payMonth, fee_property.payMoney as fee_property_payMoney, 
+    fee_property.isPay as fee_property_isPay, fee_property.payTime as fee_property_payTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fee_property fee_property
+    where fee_property.propertyId = #{propertyid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fee_property
+    where propertyId = #{propertyid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="propertyId" keyProperty="propertyid" parameterType="com.qiin.pmsys.entity.FeeProperty" useGeneratedKeys="true">
+    insert into fee_property (ownerId, payMonth, payMoney, 
+      isPay, payTime)
+    values (#{ownerid,jdbcType=INTEGER}, #{paymonth,jdbcType=VARCHAR}, #{paymoney,jdbcType=DOUBLE}, 
+      #{ispay,jdbcType=INTEGER}, #{paytime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="propertyId" keyProperty="propertyid" parameterType="com.qiin.pmsys.entity.FeeProperty" useGeneratedKeys="true">
+    insert into fee_property
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ownerid != null">
+        ownerId,
+      </if>
+      <if test="paymonth != null">
+        payMonth,
+      </if>
+      <if test="paymoney != null">
+        payMoney,
+      </if>
+      <if test="ispay != null">
+        isPay,
+      </if>
+      <if test="paytime != null">
+        payTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ownerid != null">
+        #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="paymonth != null">
+        #{paymonth,jdbcType=VARCHAR},
+      </if>
+      <if test="paymoney != null">
+        #{paymoney,jdbcType=DOUBLE},
+      </if>
+      <if test="ispay != null">
+        #{ispay,jdbcType=INTEGER},
+      </if>
+      <if test="paytime != null">
+        #{paytime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.FeeProperty">
+    update fee_property
+    <set>
+      <if test="ownerid != null">
+        ownerId = #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="paymonth != null">
+        payMonth = #{paymonth,jdbcType=VARCHAR},
+      </if>
+      <if test="paymoney != null">
+        payMoney = #{paymoney,jdbcType=DOUBLE},
+      </if>
+      <if test="ispay != null">
+        isPay = #{ispay,jdbcType=INTEGER},
+      </if>
+      <if test="paytime != null">
+        payTime = #{paytime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where propertyId = #{propertyid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.FeeProperty">
+    update fee_property
+    set ownerId = #{ownerid,jdbcType=INTEGER},
+      payMonth = #{paymonth,jdbcType=VARCHAR},
+      payMoney = #{paymoney,jdbcType=DOUBLE},
+      isPay = #{ispay,jdbcType=INTEGER},
+      payTime = #{paytime,jdbcType=TIMESTAMP}
+    where propertyId = #{propertyid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.dao.ComplaintDao">
+    <resultMap type="com.qiin.pmsys.entity.Complaint" id="ComplaintMap">
+        <result property="complaintid" column="complaintId" jdbcType="INTEGER"/>
+        <result property="ownerid" column="ownerId" javaType="INTEGER"/>
+        <result property="complaints" column="complaints" jdbcType="VARCHAR"/>
+        <result property="reply" column="reply" jdbcType="VARCHAR"/>
+        <result property="revoke" column="revoke" jdbcType="INTEGER"/>
+        <collection property="owner" ofType="com.qiin.pmsys.entity.Owner">
+            <id property="ownerid" column="ownerId"/>
+            <result property="ownername" column="ownerName"/>
+        </collection>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ComplaintMap">
+        select complaintId,
+               complaints,
+               reply, complaint.revoke
+        from complaint
+        where complaintId = #{complaintid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ComplaintMap">
+        select
+        complaintId, complaints, reply, complaint.revoke,complaint.ownerId,owner.ownerName
+        from complaint,owner
+        <where>
+            complaint.ownerId=owner.ownerId
+            <if test="Complaints != null and Complaints != ''">
+                and complaints like #{Complaints}
+            </if>
+        </where>
+        limit #{pageNum}, #{pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from complaint
+        <where>
+            <if test="complaintid != null">
+                and complaintId = #{complaintid}
+            </if>
+            <if test="complaints != null and complaints != ''">
+                and complaints = #{complaints}
+            </if>
+            <if test="reply != null and reply != ''">
+                and reply = #{reply}
+            </if>
+            <if test="revoke != null">
+                and revoke = #{revoke}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="complaintid" useGeneratedKeys="true">
+        insert into complaint(complaints, reply, revoke)
+        values (#{complaints}, #{reply}, #{revoke})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="complaintid" useGeneratedKeys="true">
+        insert into complaint(complaints, reply, revoke)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.complaints}, #{entity.reply}, #{entity.revoke})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="complaintid" useGeneratedKeys="true">
+        insert into complaint(complaints, reply, revoke)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.complaints}, #{entity.reply}, #{entity.revoke})
+        </foreach>
+        on duplicate key update
+        complaints = values(complaints),
+        reply = values(reply),
+        revoke = values(revoke)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update complaint
+        <set>
+            <if test="complaints != null and complaints != ''">
+                complaints = #{complaints},
+            </if>
+            <if test="reply != null and reply != ''">
+                reply = #{reply},
+            </if>
+            <if test="revoke != null">
+                revoke = #{revoke},
+            </if>
+        </set>
+        where complaintId = #{complaintid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from complaint
+        where complaintId = #{complaintid}
+    </delete>
+</mapper>
+

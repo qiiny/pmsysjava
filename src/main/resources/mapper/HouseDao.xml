@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.dao.HouseDao">
+
+    <resultMap type="com.qiin.pmsys.entity.House" id="HouseMap">
+        <result property="houseid" column="houseId" jdbcType="INTEGER"/>
+        <result property="housename" column="houseName" jdbcType="VARCHAR"/>
+        <result property="buildingid" column="buildingId" jdbcType="INTEGER"/>
+        <result property="ownerid" column="ownerId" jdbcType="INTEGER"/>
+        <collection property="building" ofType="com.qiin.pmsys.entity.Building">
+            <id property="buildingid" column="buildingId"/>
+            <result property="buildingname" column="buildingName"/>
+        </collection>
+        <collection property="owner" ofType="com.qiin.pmsys.entity.Owner">
+            <id property="ownerid" column="ownerId"/>
+            <result property="ownername" column="ownerName"/>
+        </collection>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HouseMap">
+        select
+          houseId, houseName, buildingId, ownerId
+        from house
+        where houseId = #{houseid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HouseMap">
+        select
+          h.houseId, h.houseName, h.buildingId,b.buildingName,h.ownerId,n.ownerName
+        from house h,building b,owner n
+        <where>
+            h.buildingId=b.buildingId and h.ownerId=n.ownerId
+            <if test="housename != null and housename != '' and housename != 'null'">
+                and h.houseName like #{housename}
+            </if>
+        </where>
+        GROUP BY h.houseId
+        limit #{pageStar}, #{pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from house
+        <where>
+            <if test="houseid != null">
+                and houseId = #{houseid}
+            </if>
+            <if test="housename != null and housename != ''">
+                and houseName = #{housename}
+            </if>
+            <if test="buildingid != null">
+                and buildingId = #{buildingid}
+            </if>
+            <if test="ownerid != null">
+                and ownerId = #{ownerid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="houseid" useGeneratedKeys="true">
+        insert into house(houseName, buildingId, ownerId)
+        values (#{housename}, #{buildingid}, #{ownerid})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="houseid" useGeneratedKeys="true">
+        insert into house(houseName, buildingId, ownerId)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.housename}, #{entity.buildingid}, #{entity.ownerid})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="houseid" useGeneratedKeys="true">
+        insert into house(houseName, buildingId, ownerId)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.housename}, #{entity.buildingid}, #{entity.ownerid})
+        </foreach>
+        on duplicate key update
+        houseName = values(houseName),
+        buildingId = values(buildingId),
+        ownerId = values(ownerId)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update house
+        <set>
+            <if test="housename != null and housename != ''">
+                houseName = #{housename},
+            </if>
+            <if test="buildingid != null">
+                buildingId = #{buildingid},
+            </if>
+            <if test="ownerid != null">
+                ownerId = #{ownerid},
+            </if>
+        </set>
+        where houseId = #{houseid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from house where houseId = #{houseid}
+    </delete>
+
+    <select id="queryByBuildingId" resultMap="HouseMap">
+        select houseId, buildingId, houseName, ownerId
+        from house
+        where buildingId =#{BuildingId};
+    </select>
+</mapper>
+

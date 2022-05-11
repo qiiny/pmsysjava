@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.StaffDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.Staff">
+    <id column="staff_staffId" jdbcType="INTEGER" property="staffid" />
+    <result column="staff_staffName" jdbcType="VARCHAR" property="staffname" />
+    <result column="staff_staffPhone" jdbcType="INTEGER" property="staffphone" />
+    <result column="staff_staffPost" jdbcType="VARCHAR" property="staffpost" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    staff.staffId as staff_staffId, staff.staffName as staff_staffName, staff.staffPhone as staff_staffPhone, 
+    staff.staffPost as staff_staffPost
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from staff staff
+    where staff.staffId = #{staffid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from staff
+    where staffId = #{staffid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="staffId" keyProperty="staffid" parameterType="com.qiin.pmsys.entity.Staff" useGeneratedKeys="true">
+    insert into staff (staffName, staffPhone, staffPost
+      )
+    values (#{staffname,jdbcType=VARCHAR}, #{staffphone,jdbcType=INTEGER}, #{staffpost,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="staffId" keyProperty="staffid" parameterType="com.qiin.pmsys.entity.Staff" useGeneratedKeys="true">
+    insert into staff
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="staffname != null">
+        staffName,
+      </if>
+      <if test="staffphone != null">
+        staffPhone,
+      </if>
+      <if test="staffpost != null">
+        staffPost,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="staffname != null">
+        #{staffname,jdbcType=VARCHAR},
+      </if>
+      <if test="staffphone != null">
+        #{staffphone,jdbcType=INTEGER},
+      </if>
+      <if test="staffpost != null">
+        #{staffpost,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.Staff">
+    update staff
+    <set>
+      <if test="staffname != null">
+        staffName = #{staffname,jdbcType=VARCHAR},
+      </if>
+      <if test="staffphone != null">
+        staffPhone = #{staffphone,jdbcType=INTEGER},
+      </if>
+      <if test="staffpost != null">
+        staffPost = #{staffpost,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where staffId = #{staffid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.Staff">
+    update staff
+    set staffName = #{staffname,jdbcType=VARCHAR},
+      staffPhone = #{staffphone,jdbcType=INTEGER},
+      staffPost = #{staffpost,jdbcType=VARCHAR}
+    where staffId = #{staffid,jdbcType=INTEGER}
+  </update>
+</mapper>

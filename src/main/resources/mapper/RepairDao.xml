@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.dao.RepairDao">
+
+    <resultMap type="com.qiin.pmsys.entity.Repair" id="RepairMap">
+        <result property="repairid" column="repairId" jdbcType="INTEGER"/>
+        <result property="repairtype" column="repairType" jdbcType="INTEGER"/>
+        <result property="ownerid" column="ownerId" jdbcType="INTEGER"/>
+        <result property="place" column="place" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="staff" column="staff" jdbcType="INTEGER"/>
+        <result property="repairtime" column="repairTime" jdbcType="TIMESTAMP"/>
+        <result property="isrepair" column="isRepair" jdbcType="INTEGER"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+        <collection property="owner" ofType="com.qiin.pmsys.entity.Owner">
+            <id property="ownerid" column="ownerId"/>
+            <result property="ownername" column="ownerName"/>
+        </collection>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RepairMap">
+        select
+          repairId, repairType, ownerId, place, createTime, staff, repairTime, isRepair, remarks
+        from repair
+        where repairId = #{repairid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RepairMap">
+        select
+          repairId, repairType, repair.ownerId, owner.ownerName,place, repair.createTime, staff, repairTime, isRepair, repair.remarks
+        from repair,owner
+        <where>
+        repair.ownerId=owner.ownerId
+            <if test="repairtype != null">
+                and repairType = #{repairtype}
+            </if>
+            <if test="createtime != null and createtime != '' and createtime != 'null'">
+                and  YEAR(repair.createTime)=YEAR(#{createtime}) AND MONTH(repair.createTime)=MONTH(#{createtime})
+            </if>
+        </where>
+        limit #{pageStart}, #{pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from repair
+        <where>
+            <if test="repairid != null">
+                and repairId = #{repairid}
+            </if>
+            <if test="repairtype != null">
+                and repairType = #{repairtype}
+            </if>
+            <if test="ownerid != null">
+                and ownerId = #{ownerid}
+            </if>
+            <if test="place != null and place != ''">
+                and place = #{place}
+            </if>
+            <if test="createtime != null">
+                and createTime = #{createtime}
+            </if>
+            <if test="staff != null">
+                and staff = #{staff}
+            </if>
+            <if test="repairtime != null">
+                and repairTime = #{repairtime}
+            </if>
+            <if test="isrepair != null">
+                and isRepair = #{isrepair}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and remarks = #{remarks}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="repairid" useGeneratedKeys="true">
+        insert into repair(repairType, ownerId, place, createTime, staff, repairTime, isRepair, remarks)
+        values (#{repairtype}, #{ownerid}, #{place}, #{createtime}, #{staff}, #{repairtime}, #{isrepair}, #{remarks})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="repairid" useGeneratedKeys="true">
+        insert into repair(repairType, ownerId, place, createTime, staff, repairTime, isRepair, remarks)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.repairtype}, #{entity.ownerid}, #{entity.place}, #{entity.createtime}, #{entity.staff}, #{entity.repairtime}, #{entity.isrepair}, #{entity.remarks})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="repairid" useGeneratedKeys="true">
+        insert into repair(repairType, ownerId, place, createTime, staff, repairTime, isRepair, remarks)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.repairtype}, #{entity.ownerid}, #{entity.place}, #{entity.createtime}, #{entity.staff}, #{entity.repairtime}, #{entity.isrepair}, #{entity.remarks})
+        </foreach>
+        on duplicate key update
+        repairType = values(repairType),
+        ownerId = values(ownerId),
+        place = values(place),
+        createTime = values(createTime),
+        staff = values(staff),
+        repairTime = values(repairTime),
+        isRepair = values(isRepair),
+        remarks = values(remarks)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update repair
+        <set>
+            <if test="repairtype != null">
+                repairType = #{repairtype},
+            </if>
+            <if test="ownerid != null">
+                ownerId = #{ownerid},
+            </if>
+            <if test="place != null and place != ''">
+                place = #{place},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime},
+            </if>
+            <if test="staff != null">
+                staff = #{staff},
+            </if>
+            <if test="repairtime != null">
+                repairTime = #{repairtime},
+            </if>
+            <if test="isrepair != null">
+                isRepair = #{isrepair},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+        </set>
+        where repairId = #{repairid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from repair where repairId = #{repairid}
+    </delete>
+
+</mapper>
+

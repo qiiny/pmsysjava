@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.CommentDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.Comment">
+    <id column="comment_id" jdbcType="INTEGER" property="id" />
+    <result column="comment_ownerId" jdbcType="VARCHAR" property="ownerid" />
+    <result column="comment_name" jdbcType="VARCHAR" property="name" />
+    <result column="comment_avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="comment_content" jdbcType="VARCHAR" property="content" />
+    <result column="comment_parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="comment_comment_num" jdbcType="INTEGER" property="commentNum" />
+    <result column="comment_like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="comment_is_like" jdbcType="BOOLEAN" property="isLike" />
+    <result column="comment_like_list_id" jdbcType="VARCHAR" property="likeListId" />
+    <result column="comment_input_show" jdbcType="BOOLEAN" property="inputShow" />
+    <result column="comment_time" jdbcType="TIMESTAMP" property="time" />
+    <result column="comment_from_id" jdbcType="VARCHAR" property="fromId" />
+    <result column="comment_from_name" jdbcType="VARCHAR" property="fromName" />
+    <result column="comment_gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="comment_gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="comment_is_deleted" jdbcType="BOOLEAN" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    comment.id as comment_id, comment.ownerId as comment_ownerId, comment.`name` as `comment_name`, 
+    comment.avatar as comment_avatar, comment.content as comment_content, comment.parent_id as comment_parent_id, 
+    comment.comment_num as comment_comment_num, comment.like_count as comment_like_count, 
+    comment.is_like as comment_is_like, comment.like_list_id as comment_like_list_id, 
+    comment.input_show as comment_input_show, comment.`time` as `comment_time`, comment.from_id as comment_from_id, 
+    comment.from_name as comment_from_name, comment.gmt_modified as comment_gmt_modified, 
+    comment.gmt_create as comment_gmt_create, comment.is_deleted as comment_is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from comment comment
+    where comment.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.qiin.pmsys.entity.Comment" useGeneratedKeys="true">
+    insert into comment (ownerId, `name`, avatar, 
+      content, parent_id, comment_num, 
+      like_count, is_like, like_list_id, 
+      input_show, `time`, from_id, 
+      from_name, gmt_modified, gmt_create, 
+      is_deleted)
+    values (#{ownerid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{commentNum,jdbcType=INTEGER}, 
+      #{likeCount,jdbcType=INTEGER}, #{isLike,jdbcType=BOOLEAN}, #{likeListId,jdbcType=VARCHAR}, 
+      #{inputShow,jdbcType=BOOLEAN}, #{time,jdbcType=TIMESTAMP}, #{fromId,jdbcType=VARCHAR}, 
+      #{fromName,jdbcType=VARCHAR}, #{gmtModified,jdbcType=TIMESTAMP}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BOOLEAN})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.qiin.pmsys.entity.Comment" useGeneratedKeys="true">
+    insert into comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ownerid != null">
+        ownerId,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="commentNum != null">
+        comment_num,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+      <if test="isLike != null">
+        is_like,
+      </if>
+      <if test="likeListId != null">
+        like_list_id,
+      </if>
+      <if test="inputShow != null">
+        input_show,
+      </if>
+      <if test="time != null">
+        `time`,
+      </if>
+      <if test="fromId != null">
+        from_id,
+      </if>
+      <if test="fromName != null">
+        from_name,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ownerid != null">
+        #{ownerid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="commentNum != null">
+        #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="isLike != null">
+        #{isLike,jdbcType=BOOLEAN},
+      </if>
+      <if test="likeListId != null">
+        #{likeListId,jdbcType=VARCHAR},
+      </if>
+      <if test="inputShow != null">
+        #{inputShow,jdbcType=BOOLEAN},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fromId != null">
+        #{fromId,jdbcType=VARCHAR},
+      </if>
+      <if test="fromName != null">
+        #{fromName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BOOLEAN},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.Comment">
+    update comment
+    <set>
+      <if test="ownerid != null">
+        ownerId = #{ownerid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="commentNum != null">
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="isLike != null">
+        is_like = #{isLike,jdbcType=BOOLEAN},
+      </if>
+      <if test="likeListId != null">
+        like_list_id = #{likeListId,jdbcType=VARCHAR},
+      </if>
+      <if test="inputShow != null">
+        input_show = #{inputShow,jdbcType=BOOLEAN},
+      </if>
+      <if test="time != null">
+        `time` = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fromId != null">
+        from_id = #{fromId,jdbcType=VARCHAR},
+      </if>
+      <if test="fromName != null">
+        from_name = #{fromName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BOOLEAN},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.Comment">
+    update comment
+    set ownerId = #{ownerid,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      comment_num = #{commentNum,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      is_like = #{isLike,jdbcType=BOOLEAN},
+      like_list_id = #{likeListId,jdbcType=VARCHAR},
+      input_show = #{inputShow,jdbcType=BOOLEAN},
+      `time` = #{time,jdbcType=TIMESTAMP},
+      from_id = #{fromId,jdbcType=VARCHAR},
+      from_name = #{fromName,jdbcType=VARCHAR},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BOOLEAN}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

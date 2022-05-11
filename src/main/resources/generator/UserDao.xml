@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.UserDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.User">
+    <id column="user_userId" jdbcType="INTEGER" property="userid" />
+    <result column="user_username" jdbcType="VARCHAR" property="username" />
+    <result column="user_password" jdbcType="VARCHAR" property="password" />
+    <result column="user_ownerId" jdbcType="INTEGER" property="ownerid" />
+    <result column="user_nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="user_avatar" jdbcType="VARCHAR" property="avatar" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user.userId as user_userId, user.username as user_username, user.`password` as `user_password`, 
+    user.ownerId as user_ownerId, user.nickname as user_nickname, user.avatar as user_avatar
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user user
+    where user.userId = #{userid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where userId = #{userid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="userId" keyProperty="userid" parameterType="com.qiin.pmsys.entity.User" useGeneratedKeys="true">
+    insert into user (username, `password`, ownerId, 
+      nickname, avatar)
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{ownerid,jdbcType=INTEGER}, 
+      #{nickname,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="userId" keyProperty="userid" parameterType="com.qiin.pmsys.entity.User" useGeneratedKeys="true">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="ownerid != null">
+        ownerId,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerid != null">
+        #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.User">
+    update user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerid != null">
+        ownerId = #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.User">
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      ownerId = #{ownerid,jdbcType=INTEGER},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR}
+    where userId = #{userid,jdbcType=INTEGER}
+  </update>
+</mapper>

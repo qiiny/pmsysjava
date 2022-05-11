@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.RepairDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.Repair">
+    <id column="repair_repairId" jdbcType="INTEGER" property="repairid" />
+    <result column="repair_repairType" jdbcType="INTEGER" property="repairtype" />
+    <result column="repair_ownerId" jdbcType="INTEGER" property="ownerid" />
+    <result column="repair_place" jdbcType="VARCHAR" property="place" />
+    <result column="repair_createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="repair_staff" jdbcType="INTEGER" property="staff" />
+    <result column="repair_repairTime" jdbcType="TIMESTAMP" property="repairtime" />
+    <result column="repair_isRepair" jdbcType="INTEGER" property="isrepair" />
+    <result column="repair_remarks" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    repair.repairId as repair_repairId, repair.repairType as repair_repairType, repair.ownerId as repair_ownerId, 
+    repair.place as repair_place, repair.createTime as repair_createTime, repair.staff as repair_staff, 
+    repair.repairTime as repair_repairTime, repair.isRepair as repair_isRepair, repair.remarks as repair_remarks
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from repair repair
+    where repair.repairId = #{repairid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from repair
+    where repairId = #{repairid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="repairId" keyProperty="repairid" parameterType="com.qiin.pmsys.entity.Repair" useGeneratedKeys="true">
+    insert into repair (repairType, ownerId, place, 
+      createTime, staff, repairTime, 
+      isRepair, remarks)
+    values (#{repairtype,jdbcType=INTEGER}, #{ownerid,jdbcType=INTEGER}, #{place,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{staff,jdbcType=INTEGER}, #{repairtime,jdbcType=TIMESTAMP}, 
+      #{isrepair,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="repairId" keyProperty="repairid" parameterType="com.qiin.pmsys.entity.Repair" useGeneratedKeys="true">
+    insert into repair
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="repairtype != null">
+        repairType,
+      </if>
+      <if test="ownerid != null">
+        ownerId,
+      </if>
+      <if test="place != null">
+        place,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="staff != null">
+        staff,
+      </if>
+      <if test="repairtime != null">
+        repairTime,
+      </if>
+      <if test="isrepair != null">
+        isRepair,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="repairtype != null">
+        #{repairtype,jdbcType=INTEGER},
+      </if>
+      <if test="ownerid != null">
+        #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="place != null">
+        #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staff != null">
+        #{staff,jdbcType=INTEGER},
+      </if>
+      <if test="repairtime != null">
+        #{repairtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isrepair != null">
+        #{isrepair,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.Repair">
+    update repair
+    <set>
+      <if test="repairtype != null">
+        repairType = #{repairtype,jdbcType=INTEGER},
+      </if>
+      <if test="ownerid != null">
+        ownerId = #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="place != null">
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staff != null">
+        staff = #{staff,jdbcType=INTEGER},
+      </if>
+      <if test="repairtime != null">
+        repairTime = #{repairtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isrepair != null">
+        isRepair = #{isrepair,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where repairId = #{repairid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.Repair">
+    update repair
+    set repairType = #{repairtype,jdbcType=INTEGER},
+      ownerId = #{ownerid,jdbcType=INTEGER},
+      place = #{place,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      staff = #{staff,jdbcType=INTEGER},
+      repairTime = #{repairtime,jdbcType=TIMESTAMP},
+      isRepair = #{isrepair,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where repairId = #{repairid,jdbcType=INTEGER}
+  </update>
+</mapper>

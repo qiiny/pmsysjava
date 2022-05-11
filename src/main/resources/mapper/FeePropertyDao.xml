@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.dao.FeePropertyDao">
+    <resultMap type="com.qiin.pmsys.entity.House" id="HouseMap">
+        <result property="houseid" column="houseId" jdbcType="INTEGER"/>
+        <result property="buildingid" column="buildingId" jdbcType="INTEGER"/>
+        <result property="housename" column="houseName" jdbcType="VARCHAR"/>
+        <result property="ownerid" column="ownerId" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap type="com.qiin.pmsys.entity.FeeProperty" id="FeePropertyMap">
+        <result property="propertyid" column="propertyId" jdbcType="INTEGER"/>
+        <result property="ownerid" column="ownerId" jdbcType="INTEGER"/>
+        <result property="paymonth" column="payMonth" jdbcType="VARCHAR"/>
+        <result property="paymoney" column="payMoney" jdbcType="VARCHAR"/>
+        <result property="ispay" column="isPay" jdbcType="INTEGER"/>
+        <result property="paytime" column="payTime" jdbcType="TIMESTAMP"/>
+        <collection property="owner" ofType="com.qiin.pmsys.entity.Owner">
+            <id column="ownerId" property="ownerid"/>
+            <result column="ownername" property="ownername"/>
+            <collection property="houses" ofType="com.qiin.pmsys.entity.House" resultMap="HouseMap">
+                <result column="houseId" property="houseid"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="FeePropertyMap">
+        select
+          propertyId, ownerId, payMonth, payMoney, isPay, payTime
+        from fee_property
+        where propertyId = #{propertyid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="FeePropertyMap">
+        select
+        propertyId, f.ownerId, PayMonth, PayMoney, isPay, PayTime,n.ownerName,h.houseName
+        from fee_property f,owner n,house h
+        <where>
+            f.ownerId=n.ownerId AND n.`houseId`=h.`houseId`
+            <if test="payMonth != null and payMonth != '' and payMonth !='null'">
+                and  YEAR(f.PayMonth)=YEAR(#{payMonth}) AND MONTH(f.PayMonth)=MONTH(#{payMonth})
+            </if>
+            <if test="ownerId != null and ownerId != ''">
+                and  f.ownerId=#{ownerId}
+            </if>
+        </where>
+        limit #{pageStar}, #{pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from fee_property
+        <where>
+            <if test="propertyid != null">
+                and propertyId = #{propertyid}
+            </if>
+            <if test="ownerid != null">
+                and ownerId = #{ownerid}
+            </if>
+            <if test="paymonth != null and paymonth != ''">
+                and payMonth = #{paymonth}
+            </if>
+            <if test="paymoney != null">
+                and payMoney = #{paymoney}
+            </if>
+            <if test="ispay != null">
+                and isPay = #{ispay}
+            </if>
+            <if test="paytime != null">
+                and payTime = #{paytime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="propertyid" useGeneratedKeys="true">
+        insert into fee_property(ownerId, payMonth, payMoney, isPay, payTime)
+        values (#{ownerid}, #{paymonth}, #{paymoney}, #{ispay}, #{paytime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="propertyid" useGeneratedKeys="true">
+        insert into fee_property(ownerId, payMonth, payMoney, isPay, payTime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.ownerid}, #{entity.paymonth}, #{entity.paymoney}, #{entity.ispay}, #{entity.paytime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="propertyid" useGeneratedKeys="true">
+        insert into fee_property(ownerId, payMonth, payMoney, isPay, payTime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.ownerid}, #{entity.paymonth}, #{entity.paymoney}, #{entity.ispay}, #{entity.paytime})
+        </foreach>
+        on duplicate key update
+        ownerId = values(ownerId),
+        payMonth = values(payMonth),
+        payMoney = values(payMoney),
+        isPay = values(isPay),
+        payTime = values(payTime)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update fee_property
+        <set>
+            <if test="ownerid != null">
+                ownerId = #{ownerid},
+            </if>
+            <if test="paymonth != null and paymonth != ''">
+                payMonth = #{paymonth},
+            </if>
+            <if test="paymoney != null">
+                payMoney = #{paymoney},
+            </if>
+            <if test="ispay != null">
+                isPay = #{ispay},
+            </if>
+            <if test="paytime != null">
+                payTime = #{paytime},
+            </if>
+        </set>
+        where propertyId = #{propertyid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from fee_property where propertyId = #{propertyid}
+    </delete>
+
+</mapper>
+

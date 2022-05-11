@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.FeePowerDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.FeePower">
+    <id column="fee_power_powerId" jdbcType="INTEGER" property="powerid" />
+    <result column="fee_power_ownerId" jdbcType="INTEGER" property="ownerid" />
+    <result column="fee_power_payMonth" jdbcType="VARCHAR" property="paymonth" />
+    <result column="fee_power_payMoney" jdbcType="DOUBLE" property="paymoney" />
+    <result column="fee_power_powerNum" jdbcType="VARCHAR" property="powernum" />
+    <result column="fee_power_isPay" jdbcType="INTEGER" property="ispay" />
+    <result column="fee_power_payTime" jdbcType="TIMESTAMP" property="paytime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    fee_power.powerId as fee_power_powerId, fee_power.ownerId as fee_power_ownerId, fee_power.payMonth as fee_power_payMonth, 
+    fee_power.payMoney as fee_power_payMoney, fee_power.powerNum as fee_power_powerNum, 
+    fee_power.isPay as fee_power_isPay, fee_power.payTime as fee_power_payTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fee_power fee_power
+    where fee_power.powerId = #{powerid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fee_power
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="powerId" keyProperty="powerid" parameterType="com.qiin.pmsys.entity.FeePower" useGeneratedKeys="true">
+    insert into fee_power (ownerId, payMonth, payMoney, 
+      powerNum, isPay, payTime
+      )
+    values (#{ownerid,jdbcType=INTEGER}, #{paymonth,jdbcType=VARCHAR}, #{paymoney,jdbcType=DOUBLE}, 
+      #{powernum,jdbcType=VARCHAR}, #{ispay,jdbcType=INTEGER}, #{paytime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="powerId" keyProperty="powerid" parameterType="com.qiin.pmsys.entity.FeePower" useGeneratedKeys="true">
+    insert into fee_power
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ownerid != null">
+        ownerId,
+      </if>
+      <if test="paymonth != null">
+        payMonth,
+      </if>
+      <if test="paymoney != null">
+        payMoney,
+      </if>
+      <if test="powernum != null">
+        powerNum,
+      </if>
+      <if test="ispay != null">
+        isPay,
+      </if>
+      <if test="paytime != null">
+        payTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ownerid != null">
+        #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="paymonth != null">
+        #{paymonth,jdbcType=VARCHAR},
+      </if>
+      <if test="paymoney != null">
+        #{paymoney,jdbcType=DOUBLE},
+      </if>
+      <if test="powernum != null">
+        #{powernum,jdbcType=VARCHAR},
+      </if>
+      <if test="ispay != null">
+        #{ispay,jdbcType=INTEGER},
+      </if>
+      <if test="paytime != null">
+        #{paytime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.FeePower">
+    update fee_power
+    <set>
+      <if test="ownerid != null">
+        ownerId = #{ownerid,jdbcType=INTEGER},
+      </if>
+      <if test="paymonth != null">
+        payMonth = #{paymonth,jdbcType=VARCHAR},
+      </if>
+      <if test="paymoney != null">
+        payMoney = #{paymoney,jdbcType=DOUBLE},
+      </if>
+      <if test="powernum != null">
+        powerNum = #{powernum,jdbcType=VARCHAR},
+      </if>
+      <if test="ispay != null">
+        isPay = #{ispay,jdbcType=INTEGER},
+      </if>
+      <if test="paytime != null">
+        payTime = #{paytime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.FeePower">
+    update fee_power
+    set ownerId = #{ownerid,jdbcType=INTEGER},
+      payMonth = #{paymonth,jdbcType=VARCHAR},
+      payMoney = #{paymoney,jdbcType=DOUBLE},
+      powerNum = #{powernum,jdbcType=VARCHAR},
+      isPay = #{ispay,jdbcType=INTEGER},
+      payTime = #{paytime,jdbcType=TIMESTAMP}
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </update>
+</mapper>

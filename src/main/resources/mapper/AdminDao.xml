@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.dao.AdminDao">
+
+    <resultMap type="com.qiin.pmsys.entity.Admin" id="AdminMap">
+        <result property="adminid" column="adminId" jdbcType="INTEGER"/>
+        <result property="username" column="adminName" jdbcType="VARCHAR"/>
+        <result property="password" column="adminPassword" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        adminid,adminname,adminpassword
+    </sql>
+    <!--查询单个-->
+    <select id="queryById" resultMap="AdminMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from admin
+        where adminId = #{adminid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AdminMap">
+        select
+            <include refid="Base_Column_List"/>
+        from admin
+        <where>
+            <if test="adminid != null">
+                and adminId = #{adminid}
+            </if>
+            <if test="adminname != null and adminname != ''">
+                and adminName = #{adminname}
+            </if>
+            <if test="adminpassword != null and adminpassword != ''">
+                and adminPassword = #{adminpassword}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from admin
+        <where>
+            <if test="adminid != null">
+                and adminId = #{adminid}
+            </if>
+            <if test="adminname != null and adminname != ''">
+                and adminName = #{adminname}
+            </if>
+            <if test="adminpassword != null and adminpassword != ''">
+                and adminPassword = #{adminpassword}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="adminid" useGeneratedKeys="true">
+        insert into admin(adminName, adminPassword)
+        values (#{adminname}, #{adminpassword})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="adminid" useGeneratedKeys="true">
+        insert into admin(adminName, adminPassword)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.adminname}, #{entity.adminpassword})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="adminid" useGeneratedKeys="true">
+        insert into admin(adminName, adminPassword)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.adminname}, #{entity.adminpassword})
+        </foreach>
+        on duplicate key update
+        adminName = values(adminName),
+        adminPassword = values(adminPassword)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update admin
+        <set>
+            <if test="adminname != null and adminname != ''">
+                adminName = #{adminname},
+            </if>
+            <if test="adminpassword != null and adminpassword != ''">
+                adminPassword = #{adminpassword},
+            </if>
+        </set>
+        where adminId = #{adminid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from admin
+        where adminId = #{adminid}
+    </delete>
+    <select id="queryByAdmin" resultMap="AdminMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin
+        where admin.adminName=#{username}
+        and admin.adminpassword=#{password}
+    </select>
+
+</mapper>
+

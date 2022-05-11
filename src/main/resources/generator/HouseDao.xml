@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiin.pmsys.HouseDao">
+  <resultMap id="BaseResultMap" type="com.qiin.pmsys.entity.House">
+    <id column="house_houseId" jdbcType="INTEGER" property="houseid" />
+    <result column="house_building" jdbcType="INTEGER" property="building" />
+    <result column="house_houseName" jdbcType="VARCHAR" property="housename" />
+    <result column="house_status" jdbcType="INTEGER" property="status" />
+    <result column="house_houseOwnerId" jdbcType="INTEGER" property="houseownerid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    house.houseId as house_houseId, house.building as house_building, house.houseName as house_houseName, 
+    house.`status` as `house_status`, house.houseOwnerId as house_houseOwnerId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from house house
+    where house.houseId = #{houseid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from house
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="houseId" keyProperty="houseid" parameterType="com.qiin.pmsys.entity.House" useGeneratedKeys="true">
+    insert into house (building, houseName, `status`, 
+      houseOwnerId)
+    values (#{building,jdbcType=INTEGER}, #{housename,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{houseownerid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="houseId" keyProperty="houseid" parameterType="com.qiin.pmsys.entity.House" useGeneratedKeys="true">
+    insert into house
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="building != null">
+        building,
+      </if>
+      <if test="housename != null">
+        houseName,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="houseownerid != null">
+        houseOwnerId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="building != null">
+        #{building,jdbcType=INTEGER},
+      </if>
+      <if test="housename != null">
+        #{housename,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="houseownerid != null">
+        #{houseownerid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiin.pmsys.entity.House">
+    update house
+    <set>
+      <if test="building != null">
+        building = #{building,jdbcType=INTEGER},
+      </if>
+      <if test="housename != null">
+        houseName = #{housename,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="houseownerid != null">
+        houseOwnerId = #{houseownerid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qiin.pmsys.entity.House">
+    update house
+    set building = #{building,jdbcType=INTEGER},
+      houseName = #{housename,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      houseOwnerId = #{houseownerid,jdbcType=INTEGER}
+    where houseId = #{houseid,jdbcType=INTEGER}
+  </update>
+</mapper>
