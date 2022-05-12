@@ -58,8 +58,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="complaintid" useGeneratedKeys="true">
-        insert into complaint(complaints, reply, revoke)
-        values (#{complaints}, #{reply}, #{revoke})
+        insert into complaint(complaints,ownerId,reply, complaint.revoke)
+        values (#{complaints}, #{ownerid},#{reply}, #{revoke})
     </insert>
 
     <insert id="insertBatch" keyProperty="complaintid" useGeneratedKeys="true">
@@ -93,7 +93,7 @@
                 reply = #{reply},
             </if>
             <if test="revoke != null">
-                revoke = #{revoke},
+                complaint.revoke = #{revoke},
             </if>
         </set>
         where complaintId = #{complaintid}

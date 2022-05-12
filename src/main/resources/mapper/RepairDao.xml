@@ -36,6 +36,9 @@
             <if test="repairtype != null">
                 and repairType = #{repairtype}
             </if>
+            <if test="ownerid != null">
+                and repair.ownerId = #{ownerid}
+            </if>
             <if test="createtime != null and createtime != '' and createtime != 'null'">
                 and  YEAR(repair.createTime)=YEAR(#{createtime}) AND MONTH(repair.createTime)=MONTH(#{createtime})
             </if>

@@ -16,4 +16,7 @@ public class QueryInfo {
     private Integer pageNum;
     private Integer pageSize;
     private boolean isPayMonth;
+    private String createTime;
+    private Integer repairtype;
+    private String complaints;
 }

@@ -67,12 +67,14 @@ public class RepairServiceImpl implements RepairService {
     }
 
     @Override
-    public int getUserCount() {
-        return this.repairDao.count(new Repair());
+    public int getUserCount(Integer ownerid) {
+        Repair repair=new Repair();
+        repair.setOwnerid(ownerid);
+        return this.repairDao.count(repair);
     }
 
     @Override
-    public List<Repair> getAllOwner(String createtime, int repairtype,int pageNum, int pageSize) {
-        return this.repairDao.queryAllByLimit(createtime, repairtype, pageNum,pageSize);
+    public List<Repair> getAllRepair(String createtime, Integer repairtype, Integer pageNum, Integer pageSize,Integer ownerid) {
+        return this.repairDao.queryAllByLimit(createtime, repairtype, pageNum,pageSize,ownerid);
     }
 }

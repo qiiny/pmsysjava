@@ -1,6 +1,7 @@
 package com.qiin.pmsys.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.qiin.pmsys.entity.FeeProperty;
 import com.qiin.pmsys.entity.FeeWater;
 import com.qiin.pmsys.entity.Owner;
 import com.qiin.pmsys.entity.QueryInfo;
@@ -93,6 +94,13 @@ public class FeeWaterController {
     public String deleteById(Integer id) {
         return this.feeWaterService.deleteById(id)?"success":"error";
     }
-
+    @GetMapping("/status")
+    public String editStatus(Integer id) {
+        System.out.println(id);
+        FeeWater feeWater=new FeeWater();
+        feeWater.setWaterid(id);
+        feeWater.setIspay(1);
+        return this.feeWaterService.update(feeWater) > 0 ? "success" : "error";
+    }
 }
 

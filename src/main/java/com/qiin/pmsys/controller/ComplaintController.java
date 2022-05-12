@@ -3,6 +3,8 @@ package com.qiin.pmsys.controller;
 import com.alibaba.fastjson.JSON;
 import com.qiin.pmsys.entity.Complaint;
 import com.qiin.pmsys.entity.Notice;
+import com.qiin.pmsys.entity.QueryInfo;
+import com.qiin.pmsys.entity.User;
 import com.qiin.pmsys.service.ComplaintService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,12 +31,17 @@ public class ComplaintController {
     private ComplaintService complaintService;
 
     @GetMapping
-    public String queryByPage(String Complaints,int pageNum,int pageSize) {
-        List<Complaint> allUser = this.complaintService.getAllComplaints("%"+Complaints+"%", (pageNum-1)*pageSize, pageSize);
-        int ownerCount =this.complaintService.getComplaintsCount();
+    public String queryByPage(QueryInfo queryInfo) {
+        List<Complaint> allUser;
+        if (queryInfo.getComplaints() != null) {
+            allUser = this.complaintService.getAllComplaints("%" + queryInfo.getComplaints() + "%", (queryInfo.getPageNum() - 1) * queryInfo.getPageSize(), queryInfo.getPageSize());
+        } else {
+            allUser = this.complaintService.getAllComplaints(null, (queryInfo.getPageNum() - 1) * queryInfo.getPageSize(), queryInfo.getPageSize());
+        }
+        int ownerCount = this.complaintService.getComplaintsCount(queryInfo.getOwnerid());
         HashMap<String, Object> map = new HashMap<>();
-        map.put("numbers",ownerCount);
-        map.put("data",allUser);
+        map.put("numbers", ownerCount);
+        map.put("data", allUser);
         return JSON.toJSONString(map);
     }
 
@@ -56,8 +63,9 @@ public class ComplaintController {
      * @return 新增结果
      */
     @PostMapping
-    public String add(Complaint complaint) {
-        return this.complaintService.insert(complaint).getOwnerid()>0?"success":"error";
+    public String add(@RequestBody Complaint complaint) {
+        System.out.println(complaint);
+        return this.complaintService.insert(complaint)> 0 ? "success" : "error";
     }
 
     /**
@@ -68,7 +76,7 @@ public class ComplaintController {
      */
     @PutMapping
     public String edit(Complaint complaint) {
-      return this.complaintService.update(complaint).getComplaintid()>0?"success":"error";
+        return this.complaintService.update(complaint)> 0 ? "success" : "error";
     }
 
     /**
@@ -79,7 +87,13 @@ public class ComplaintController {
      */
     @DeleteMapping
     public String deleteById(Integer id) {
-        return this.complaintService.deleteById(id)?"success":"error";
+        return this.complaintService.deleteById(id) ? "success" : "error";
+    }
+
+    @PutMapping("/status")
+    public String editStatus(Complaint complaint) {
+        System.out.println(complaint);
+        return this.complaintService.update(complaint)> 0 ? "success" : "error";
     }
 
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.qiin.pmsys.entity.FeePower;
 import com.qiin.pmsys.entity.FeeWater;
 import com.qiin.pmsys.entity.QueryInfo;
+import com.qiin.pmsys.entity.User;
 import com.qiin.pmsys.service.FeePowerService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
@@ -96,6 +97,15 @@ public class FeePowerController {
     @DeleteMapping
     public String deleteById(Integer id) {
         return this.feePowerService.deleteById(id)?"success":"error";
+    }
+
+    @GetMapping("/status")
+    public String editStatus(Integer id) {
+        System.out.println(id);
+        FeePower feePower=new FeePower();
+        feePower.setPowerid(id);
+        feePower.setIspay(1);
+        return this.feePowerService.update(feePower) > 0 ? "success" : "error";
     }
 
 }

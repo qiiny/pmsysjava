@@ -1,8 +1,6 @@
 package com.qiin.pmsys.service;
 
 import com.qiin.pmsys.entity.Complaint;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public interface ComplaintService {
      * @param complaint 实例对象
      * @return 实例对象
      */
-    Complaint insert(Complaint complaint);
+    int insert(Complaint complaint);
 
     /**
      * 修改数据
@@ -38,7 +36,7 @@ public interface ComplaintService {
      * @param complaint 实例对象
      * @return 实例对象
      */
-    Complaint update(Complaint complaint);
+    int update(Complaint complaint);
 
     /**
      * 通过主键删除数据
@@ -48,7 +46,7 @@ public interface ComplaintService {
      */
     boolean deleteById(Integer complaintid);
 
-    int getComplaintsCount();
+    int getComplaintsCount(Integer ownerId);
 
     List<Complaint> getAllComplaints(String Complaints, int pageNum, int pageSize);
 }

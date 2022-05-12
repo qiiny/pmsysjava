@@ -1,8 +1,6 @@
 package com.qiin.pmsys.service;
 
 import com.qiin.pmsys.entity.Repair;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -47,7 +45,7 @@ public interface RepairService {
      */
     boolean deleteById(Integer repairid);
 
-    int getUserCount();
+    int getUserCount(Integer ownerid);
 
-    List<Repair> getAllOwner(String createtime,int repairtype, int pageNum, int pageSize);
+    List<Repair> getAllRepair(String createtime, Integer repairtype, Integer pageNum, Integer pageSize,Integer ownerid);
 }

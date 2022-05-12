@@ -4,9 +4,6 @@ import com.qiin.pmsys.entity.Complaint;
 import com.qiin.pmsys.dao.ComplaintDao;
 import com.qiin.pmsys.service.ComplaintService;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -42,9 +39,8 @@ public class ComplaintServiceImpl implements ComplaintService {
      * @return 实例对象
      */
     @Override
-    public Complaint insert(Complaint complaint) {
-        this.complaintDao.insert(complaint);
-        return complaint;
+    public int insert(Complaint complaint) {
+        return this.complaintDao.insert(complaint);
     }
 
     /**
@@ -54,9 +50,9 @@ public class ComplaintServiceImpl implements ComplaintService {
      * @return 实例对象
      */
     @Override
-    public Complaint update(Complaint complaint) {
-        this.complaintDao.update(complaint);
-        return this.queryById(complaint.getComplaintid());
+    public int update(Complaint complaint) {
+       return this.complaintDao.update(complaint);
+
     }
 
     /**
@@ -71,8 +67,10 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public int getComplaintsCount() {
-        return (int) this.complaintDao.count(new Complaint());
+    public int getComplaintsCount(Integer ownerId) {
+        Complaint complaint=new Complaint();
+        complaint.setOwnerid(ownerId);
+        return (int) this.complaintDao.count(complaint);
     }
 
     @Override

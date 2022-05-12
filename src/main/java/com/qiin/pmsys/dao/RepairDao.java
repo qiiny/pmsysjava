@@ -26,7 +26,7 @@ public interface RepairDao {
      *
      * @return 对象列表
      */
-    List<Repair> queryAllByLimit(String createtime,int repairtype, int pageStart,int pageSize);
+    List<Repair> queryAllByLimit(String createtime,Integer repairtype, Integer pageStart,Integer pageSize,Integer ownerid);
 
     /**
      * 统计总行数

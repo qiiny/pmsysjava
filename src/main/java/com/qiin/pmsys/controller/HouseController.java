@@ -67,7 +67,6 @@ public class HouseController {
      */
     @PostMapping
     public String add(@RequestBody House house) {
-
         return this.houseService.insert(house)>0?"success":"error";
     }
 

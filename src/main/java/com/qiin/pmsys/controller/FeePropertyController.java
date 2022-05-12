@@ -90,6 +90,13 @@ public class FeePropertyController {
     public String deleteById(Integer id) {
         return this.feePropertyService.deleteById(id)?"success":"error";
     }
-
+    @GetMapping("/status")
+    public String editStatus(Integer id) {
+        System.out.println(id);
+        FeeProperty feeProperty=new FeeProperty();
+        feeProperty.setPropertyid(id);
+        feeProperty.setIspay(1);
+        return this.feePropertyService.update(feeProperty) > 0 ? "success" : "error";
+    }
 }
 

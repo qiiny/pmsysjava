@@ -1,11 +1,10 @@
 package com.qiin.pmsys.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.qiin.pmsys.entity.Owner;
+import com.qiin.pmsys.entity.QueryInfo;
 import com.qiin.pmsys.entity.Repair;
+import com.qiin.pmsys.entity.User;
 import com.qiin.pmsys.service.RepairService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +29,16 @@ public class RepairController {
 
     /**
      * 分页查询
+     *
      * @return 查询结果
      */
     @GetMapping
-    public String queryByPage(String createTime,int repairtype,int pageNum,int pageSize) {
-        System.out.println(createTime);
-        List<Repair> allUser = this.repairService.getAllOwner(createTime, repairtype,(pageNum-1)*pageSize, pageSize);
-        int ownerCount =this.repairService.getUserCount();
+    public String queryByPage(QueryInfo queryInfo) {
+        List<Repair> allUser = this.repairService.getAllRepair(queryInfo.getCreateTime(), queryInfo.getRepairtype(), (queryInfo.getPageNum() - 1) * queryInfo.getPageSize(), queryInfo.getPageSize(), queryInfo.getOwnerid());
+        int ownerCount = this.repairService.getUserCount(queryInfo.getOwnerid());
         HashMap<String, Object> map = new HashMap<>();
-        map.put("numbers",ownerCount);
-        map.put("data",allUser);
+        map.put("numbers", ownerCount);
+        map.put("data", allUser);
         return JSON.toJSONString(map);
     }
 
@@ -61,8 +60,9 @@ public class RepairController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<Repair> add(@RequestBody Repair repair) {
-        return ResponseEntity.ok(this.repairService.insert(repair));
+    public String add(@RequestBody Repair repair) {
+        Repair insert = this.repairService.insert(repair);
+        return insert.getRepairid()>0?"success":"error";
     }
 
     /**
@@ -75,8 +75,9 @@ public class RepairController {
     public String edit(@RequestBody Repair repair) {
         System.out.println(repair);
         Repair update = this.repairService.update(repair);
-        return update.getRepairid()>0?"success":"error";
+        return update.getRepairid() > 0 ? "success" : "error";
     }
+
     /**
      * 删除数据
      *
@@ -87,6 +88,9 @@ public class RepairController {
     public ResponseEntity<Boolean> deleteById(Integer id) {
         return ResponseEntity.ok(this.repairService.deleteById(id));
     }
-
+    @PutMapping("/status")
+    public String editStatus(Repair repair) {
+        return this.repairService.update(repair).getRepairid() > 0 ? "success" : "error";
+    }
 }
 
