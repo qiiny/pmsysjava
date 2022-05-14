@@ -1,16 +1,20 @@
 package com.qiin.pmsys.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 评论(Comment)实体类
  *
- * @author qiin
- * @since 2022-03-28 00:51:29
+ * @author makejava
+ * @since 2022-05-15 00:51:36
  */
+@Data
 public class Comment implements Serializable {
-    private static final long serialVersionUID = 308993479956886226L;
+    private static final long serialVersionUID = 683510940854638280L;
     /**
      * 主键id
      */
@@ -24,78 +28,38 @@ public class Comment implements Serializable {
      */
     private String content;
     /**
-     * 父级评论id
-     */
-    private String parentId;
-    /**
      * 评论创建时间
      */
     private Date time;
     /**
-     * 回复人名称
+     * 父级评论id
+
      */
-    private String fromName;
+    private String toId;
     /**
-     * 创建时间
+     * 回复人名称
+
      */
-    private Date gmtCreate;
+    private String to;
+    /**
+     * 评论数
+     */
+    private Integer commentNum;
+    /**
+     * 头像
+     */
+    private String avater;
+    /**
+     * 评论框显示
+     */
+    private Integer inputShow;
+    /**
+     * 点赞数
+     */
+    private Integer like;
 
+    private List<Comment> reply;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public String getFromName() {
-        return fromName;
-    }
-
-    public void setFromName(String fromName) {
-        this.fromName = fromName;
-    }
-
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
 
 }
 

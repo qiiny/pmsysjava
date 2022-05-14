@@ -4,11 +4,13 @@ import com.qiin.pmsys.entity.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * 评论(Comment)表服务接口
  *
- * @author qiin
- * @since 2022-03-28 00:51:29
+ * @author makejava
+ * @since 2022-05-15 00:44:12
  */
 public interface CommentService {
 
@@ -23,8 +25,8 @@ public interface CommentService {
     /**
      * 分页查询
      *
-     * @param comment     筛选条件
-     * @param pageRequest 分页对象
+     * @param comment 筛选条件
+     * @param pageRequest      分页对象
      * @return 查询结果
      */
     Page<Comment> queryByPage(Comment comment, PageRequest pageRequest);
@@ -52,5 +54,8 @@ public interface CommentService {
      * @return 是否成功
      */
     boolean deleteById(Integer id);
+
+    List<Comment> queryComments();
+    List<Comment> queryReply(Integer toId);
 
 }

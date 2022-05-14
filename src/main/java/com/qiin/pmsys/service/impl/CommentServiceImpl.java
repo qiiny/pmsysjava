@@ -9,14 +9,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 评论(Comment)表服务实现类
  *
- * @author qiin
- * @since 2022-03-28 00:51:30
+ * @author makejava
+ * @since 2022-05-15 00:44:12
  */
-@Service
+@Service("commentService")
 public class CommentServiceImpl implements CommentService {
     @Resource
     private CommentDao commentDao;
@@ -35,8 +36,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 分页查询
      *
-     * @param comment     筛选条件
-     * @param pageRequest 分页对象
+     * @param comment 筛选条件
+     * @param pageRequest      分页对象
      * @return 查询结果
      */
     @Override
@@ -78,5 +79,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean deleteById(Integer id) {
         return this.commentDao.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<Comment> queryComments() {
+        return this.commentDao.queryComment();
+    }
+
+    @Override
+    public List<Comment> queryReply(Integer toId) {
+        return this.commentDao.queryReply(toId);
     }
 }

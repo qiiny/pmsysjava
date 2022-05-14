@@ -1,6 +1,7 @@
 package com.qiin.pmsys.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.qiin.pmsys.entity.Admin;
 import com.qiin.pmsys.entity.Owner;
 import com.qiin.pmsys.entity.User;
@@ -10,8 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -99,11 +103,13 @@ public class UserController {
         System.out.println(user);
         return this.userService.update(user) > 0 ? "success" : "error";
     }
+
     @PutMapping("/status")
     public String editStatus(User user) {
         System.out.println(user);
         return this.userService.update(user) > 0 ? "success" : "error";
     }
+
     /**
      * 删除数据
      *
@@ -115,5 +121,43 @@ public class UserController {
         return this.userService.deleteById(id) ? "success" : "error";
     }
 
+    @RequestMapping(value = "uploadImg", method = RequestMethod.POST)
+    public Object uploadAva(@RequestParam("file") MultipartFile file, @RequestParam("id") int id) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        if (file.isEmpty()) {
+            jsonObject.put("code", "200");
+            jsonObject.put("msg", "文件上传失败");
+            System.out.println("上传失败");
+            return jsonObject;
+        }
+        //文件名
+        String fileName = System.currentTimeMillis() + file.getOriginalFilename();
+        //文件路径
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img"
+                + System.getProperty("file.separator") + "test";
+        //判断文件路径
+        File file1 = new File(filePath);
+        if (!file1.exists()) {
+            //创建文件夹
+            file1.mkdirs();
+        }
+        File dest = new File(filePath + System.getProperty("file.separator") + fileName);
+        file.transferTo(dest);
+        String storeAvatorPath = "/img/test/" + fileName;
+        User user = new User();
+        user.setUserid(id);
+        user.setAvatar("http://localhost:9000" + storeAvatorPath);
+        int update = this.userService.update(user);
+        if (update > 0) {
+            User user1 = this.userService.queryById(id);
+            jsonObject.put("code", 200);
+            jsonObject.put("msg", "修改成功");
+            jsonObject.put("user", user1);
+        } else {
+            jsonObject.put("code", 201);
+            jsonObject.put("msg", "修改失败");
+        }
+        return jsonObject;
+    }
 }
 

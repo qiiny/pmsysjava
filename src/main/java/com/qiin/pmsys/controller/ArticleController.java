@@ -57,8 +57,8 @@ public class ArticleController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<Article> add(Article article) {
-        return ResponseEntity.ok(this.articleService.insert(article));
+    public String add(@RequestBody Article article) {
+        return this.articleService.insert(article).getId()>0?"success":"error";
     }
 
     /**

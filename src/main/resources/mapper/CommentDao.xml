@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qiin.pmsys.dao.CommentDao">
+
     <resultMap type="com.qiin.pmsys.entity.Comment" id="CommentMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
-        <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
         <result property="time" column="time" jdbcType="TIMESTAMP"/>
-        <result property="fromName" column="from_name" jdbcType="VARCHAR"/>
-        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="toId" column="toId" jdbcType="VARCHAR"/>
+        <result property="to" column="to" jdbcType="VARCHAR"/>
+        <result property="commentNum" column="commentNum" jdbcType="INTEGER"/>
+        <result property="avater" column="avater" jdbcType="VARCHAR"/>
+        <result property="inputShow" column="inputShow" jdbcType="INTEGER"/>
+        <result property="like" column="like" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="CommentMap">
-        select id,
-               name,
-               content,
-               parent_id, time, from_name, gmt_create
+        select
+          id, name, content, time, toId, to, commentNum, avater, inputShow, like
         from comment
         where id = #{id}
     </select>
 
+    <select id="queryComment" resultMap="CommentMap">
+        select
+            comment.id,comment.name, comment.content, comment.time, comment.toId, comment.to, comment.commentNum, comment.avater, comment.inputShow, comment.like
+        from comment
+        where toId IS NULL
+    </select>
+    <select id="queryReply" resultMap="CommentMap">
+        select
+            comment.id,comment.name, comment.content, comment.time, comment.toId, comment.to, comment.commentNum, comment.avater, comment.inputShow, comment.like
+        from comment
+        where toId IS not NULL and toId=#{toId}
+    </select>
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="CommentMap">
         select
-        id, name, content, parent_id, time, from_name, gmt_create
+          id, name, content, time, toId, to, commentNum, avater, inputShow, like
         from comment
         <where>
             <if test="id != null">
@@ -36,17 +50,26 @@
             <if test="content != null and content != ''">
                 and content = #{content}
             </if>
-            <if test="parentId != null and parentId != ''">
-                and parent_id = #{parentId}
-            </if>
             <if test="time != null">
                 and time = #{time}
             </if>
-            <if test="fromName != null and fromName != ''">
-                and from_name = #{fromName}
+            <if test="toid != null and toid != ''">
+                and toId = #{toid}
             </if>
-            <if test="gmtCreate != null">
-                and gmt_create = #{gmtCreate}
+            <if test="to != null and to != ''">
+                and to = #{to}
+            </if>
+            <if test="commentnum != null">
+                and commentNum = #{commentnum}
+            </if>
+            <if test="avater != null and avater != ''">
+                and avater = #{avater}
+            </if>
+            <if test="inputshow != null">
+                and inputShow = #{inputshow}
+            </if>
+            <if test="like != null">
+                and like = #{like}
             </if>
         </where>
         limit #{pageable.offset}, #{pageable.pageSize}
@@ -66,50 +89,60 @@
             <if test="content != null and content != ''">
                 and content = #{content}
             </if>
-            <if test="parentId != null and parentId != ''">
-                and parent_id = #{parentId}
-            </if>
             <if test="time != null">
                 and time = #{time}
             </if>
-            <if test="fromName != null and fromName != ''">
-                and from_name = #{fromName}
+            <if test="toid != null and toid != ''">
+                and toId = #{toid}
             </if>
-            <if test="gmtCreate != null">
-                and gmt_create = #{gmtCreate}
+            <if test="to != null and to != ''">
+                and to = #{to}
+            </if>
+            <if test="commentnum != null">
+                and commentNum = #{commentnum}
+            </if>
+            <if test="avater != null and avater != ''">
+                and avater = #{avater}
+            </if>
+            <if test="inputshow != null">
+                and inputShow = #{inputshow}
+            </if>
+            <if test="like != null">
+                and like = #{like}
             </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into comment(name, content, parent_id, time, from_name, gmt_create)
-        values (#{name}, #{content}, #{parentId}, #{time}, #{fromName}, #{gmtCreate})
+        insert into comment(name, content, time, toId, to, commentNum, avater, inputShow, like)
+        values (#{name}, #{content}, #{time}, #{toid}, #{to}, #{commentnum}, #{avater}, #{inputshow}, #{like})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into comment(name, content, parent_id, time, from_name, gmt_create)
+        insert into comment(name, content, time, toId, to, commentNum, avater, inputShow, like)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.content}, #{entity.parentId}, #{entity.time}, #{entity.fromName},
-            #{entity.gmtCreate})
+        (#{entity.name}, #{entity.content}, #{entity.time}, #{entity.toid}, #{entity.to}, #{entity.commentnum}, #{entity.avater}, #{entity.inputshow}, #{entity.like})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into comment(name, content, parent_id, time, from_name, gmt_create)
+        insert into comment(name, content, time, toId, to, commentNum, avater, inputShow, like)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.content}, #{entity.parentId}, #{entity.time}, #{entity.fromName},
-            #{entity.gmtCreate})
+            (#{entity.name}, #{entity.content}, #{entity.time}, #{entity.toid}, #{entity.to}, #{entity.commentnum}, #{entity.avater}, #{entity.inputshow}, #{entity.like})
         </foreach>
         on duplicate key update
         name = values(name),
         content = values(content),
-        parent_id = values(parent_id),
         time = values(time),
-        from_name = values(from_name),
-        gmt_create = values(gmt_create)
+        toId = values(toId),
+        to = values(to),
+        commentNum = values(commentNum),
+        avater = values(avater),
+        inputShow = values(inputShow),
+        like = values(like)
     </insert>
 
     <!--通过主键修改数据-->
@@ -122,17 +155,26 @@
             <if test="content != null and content != ''">
                 content = #{content},
             </if>
-            <if test="parentId != null and parentId != ''">
-                parent_id = #{parentId},
-            </if>
             <if test="time != null">
                 time = #{time},
             </if>
-            <if test="fromName != null and fromName != ''">
-                from_name = #{fromName},
+            <if test="toid != null and toid != ''">
+                toId = #{toid},
             </if>
-            <if test="gmtCreate != null">
-                gmt_create = #{gmtCreate},
+            <if test="to != null and to != ''">
+                to = #{to},
+            </if>
+            <if test="commentnum != null">
+                commentNum = #{commentnum},
+            </if>
+            <if test="avater != null and avater != ''">
+                avater = #{avater},
+            </if>
+            <if test="inputshow != null">
+                inputShow = #{inputshow},
+            </if>
+            <if test="like != null">
+                like = #{like},
             </if>
         </set>
         where id = #{id}
@@ -140,9 +182,8 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete
-        from comment
-        where id = #{id}
+        delete from comment where id = #{id}
     </delete>
+
 </mapper>
 

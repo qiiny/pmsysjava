@@ -3,18 +3,14 @@ package com.qiin.pmsys.dao;
 import com.qiin.pmsys.entity.Comment;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 评论(Comment)表数据库访问层
  *
- * @author qiin
- * @since 2022-03-28 00:51:29
+ * @author makejava
+ * @since 2022-05-15 00:44:12
  */
-@Mapper
 public interface CommentDao {
 
     /**
@@ -25,11 +21,13 @@ public interface CommentDao {
      */
     Comment queryById(Integer id);
 
+    List<Comment>queryComment();
+    List<Comment>queryReply(Integer id);
     /**
      * 查询指定行数据
      *
-     * @param comment  查询条件
-     * @param pageable 分页对象
+     * @param comment 查询条件
+     * @param pageable         分页对象
      * @return 对象列表
      */
     List<Comment> queryAllByLimit(Comment comment, @Param("pageable") Pageable pageable);

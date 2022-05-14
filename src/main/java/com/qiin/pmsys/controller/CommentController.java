@@ -1,5 +1,6 @@
 package com.qiin.pmsys.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.qiin.pmsys.entity.Comment;
 import com.qiin.pmsys.service.CommentService;
 import org.springframework.data.domain.Page;
@@ -8,12 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 评论(Comment)表控制层
  *
- * @author qiin
- * @since 2022-03-28 00:51:28
+ * @author makejava
+ * @since 2022-05-15 00:44:12
  */
 @RestController
 @RequestMapping("comment")
@@ -24,16 +26,14 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
-    /**
-     * 分页查询
-     *
-     * @param comment     筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
-     */
+
     @GetMapping
-    public ResponseEntity<Page<Comment>> queryByPage(Comment comment, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.commentService.queryByPage(comment, pageRequest));
+    public String queryByPage() {
+        List<Comment> comments = this.commentService.queryComments();
+        for (Comment comment : comments) {
+            comment.setReply(this.commentService.queryReply(comment.getId()));
+        }
+        return JSON.toJSONString(comments);
     }
 
     /**
